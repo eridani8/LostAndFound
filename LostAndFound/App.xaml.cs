@@ -3,37 +3,56 @@ using System.Windows;
 using LostAndFound.Data;
 using LostAndFound.Models;
 using LostAndFound.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace LostAndFound;
 
 public partial class App : Application
 {
-    private static IServiceProvider ServiceProvider { get; set; } = null!;
-    private static AppSettings Settings { get; set; } = null!;
+    private readonly IHost _host;
     
     public static User? CurrentUser { get; set; }
     
-    protected override void OnStartup(StartupEventArgs e)
+    public App()
+    {
+        _host = Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false);
+            })
+            .ConfigureServices((context, services) =>
+            {
+                ConfigureServices(context.Configuration, services);
+            })
+            .Build();
+    }
+    
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         
-        Settings = new AppSettings();
+        await _host.StartAsync();
         
-        Directory.CreateDirectory(Settings.ReportsDirectory);
-        
-        var services = new ServiceCollection();
-        ConfigureServices(services);
-        
-        ServiceProvider = services.BuildServiceProvider();
-        
-        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
     }
-
-    protected virtual void ConfigureServices(IServiceCollection services)
+    
+    protected override async void OnExit(ExitEventArgs e)
     {
-        services.AddSingleton(Settings);
+        using (_host)
+        {
+            await _host.StopAsync();
+        }
+        
+        base.OnExit(e);
+    }
+
+    private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+    {
+        services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
         
         services.AddSingleton<IDatabaseConnectionFactory, SqlConnectionFactory>();
         
