@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LostAndFound.Services;
@@ -28,7 +27,7 @@ public partial class LoginViewModel(IUserService userService) : ObservableObject
         }
 
         if (
-            parameter is not PasswordBox passwordBox
+            parameter is not Wpf.Ui.Controls.PasswordBox passwordBox
             || string.IsNullOrWhiteSpace(passwordBox.Password)
         )
         {
