@@ -1,6 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LostAndFound.Data;
+using LostAndFound.Models;
 using LostAndFound.Views;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
@@ -12,7 +15,8 @@ public partial class MainWindowViewModel(
     INavigationService navigationService,
     INavigationViewPageProvider navigationViewPageProvider,
     ISnackbarService snackbarService,
-    IContentDialogService dialogService) : ObservableObject
+    IContentDialogService dialogService,
+    ActionLogRepository logRepository) : ObservableObject
 {
     public ObservableCollection<NavigationViewItem> MenuItems { get; } = [];
 
@@ -25,6 +29,8 @@ public partial class MainWindowViewModel(
         
         mainWindow.NavigationView.SetPageProviderService(navigationViewPageProvider);
         navigationService.SetNavigationControl(mainWindow.NavigationView);
+        
+        mainWindow.NavigationView.Navigated += NavigationViewOnNavigated;
         
         dialogService.SetDialogHost(mainWindow.ContentDialog);
         snackbarService.SetSnackbarPresenter(mainWindow.SnackbarPresenter);
@@ -43,5 +49,14 @@ public partial class MainWindowViewModel(
         } // TODO
 
         navigationService.Navigate(homePage);
+    }
+
+    private void NavigationViewOnNavigated(NavigationView sender, NavigatedEventArgs args)
+    {
+        _ = logRepository.AddAsync(new ActionLog
+        {
+            ActionType = "OpenPage",
+            Details = $"Открыл страницу {args.Page.GetType().Name}"
+        });
     }
 }
