@@ -34,6 +34,12 @@ public partial class UsersViewModel(UserRepository userRepository, ISnackbarServ
     [RelayCommand]
     private async Task DeleteUser(User user)
     {
+        if (user.Login == "root")
+        {
+            snackbarService.Show("Ошибка", "Нельзя удалить root администратора", ControlAppearance.Danger);
+            return;
+        }
+        
         var dialog = new ContentDialog
         {
             Title = "Подтверждение удаления",
