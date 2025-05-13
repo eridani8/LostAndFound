@@ -8,6 +8,9 @@ using LostAndFound.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Wpf.Ui;
+using Wpf.Ui.Abstractions;
+using Wpf.Ui.DependencyInjection;
 
 namespace LostAndFound;
 
@@ -65,14 +68,23 @@ public partial class App : Application
 
         services.AddSingleton<IDatabaseConnectionFactory, SqlConnectionFactory>();
 
-        services.AddTransient<UserRepository>();
-        services.AddTransient<ActionLogRepository>();
+        services.AddSingleton<UserRepository>();
+        services.AddSingleton<ActionLogRepository>();
 
-        services.AddTransient<IUserService, UserService>();
+        services.AddSingleton<IUserService, UserService>();
+        
+        services.AddNavigationViewPageProvider();
+        
+        services.AddSingleton<ISnackbarService, SnackbarService>();
+        services.AddSingleton<IContentDialogService, ContentDialogService>();
+        services.AddSingleton<INavigationService, NavigationService>();
 
-        services.AddTransient<LoginViewModel>();
+        services.AddSingleton<LoginViewModel>();
+        services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<UsersViewModel>();
 
-        services.AddTransient<LoginView>();
-        services.AddTransient<MainWindow>();
+        services.AddSingleton<LoginView>();
+        services.AddSingleton<MainWindow>();
+        services.AddSingleton<UsersView>();
     }
 }

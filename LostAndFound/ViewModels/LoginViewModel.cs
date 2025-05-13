@@ -6,7 +6,7 @@ using LostAndFound.Views;
 
 namespace LostAndFound.ViewModels;
 
-public partial class LoginViewModel(IUserService userService) : ObservableObject
+public partial class LoginViewModel(IUserService userService, MainWindowViewModel mainWindowViewModel) : ObservableObject
 {
     [ObservableProperty]
     private string _login = string.Empty;
@@ -51,7 +51,7 @@ public partial class LoginViewModel(IUserService userService) : ObservableObject
             App.CurrentUser = user;
 
             var mainWindow = Application.Current.MainWindow;
-            var newMainWindow = new MainWindow();
+            var newMainWindow = new MainWindow(mainWindowViewModel);
             Application.Current.MainWindow = newMainWindow;
             newMainWindow.Show();
             mainWindow?.Close();

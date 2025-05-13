@@ -10,7 +10,8 @@
                  Height="320"
                  Width="400"
                  WindowStartupLocation="CenterScreen"
-                 ResizeMode="NoResize">
+                 ResizeMode="NoResize"
+                 d:DataContext="{d:DesignInstance viewModels:LoginViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

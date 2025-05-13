@@ -1,11 +1,13 @@
-﻿using Wpf.Ui.Controls;
+﻿using LostAndFound.ViewModels;
+using Wpf.Ui.Controls;
 
 namespace LostAndFound.Views;
 
 public partial class MainWindow : FluentWindow
 {
-    public MainWindow()
+    public MainWindow(MainWindowViewModel viewModel)
     {
         InitializeComponent();
+        DataContext = viewModel;
     }
 }
