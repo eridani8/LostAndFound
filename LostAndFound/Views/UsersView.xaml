@@ -13,19 +13,16 @@
              d:DataContext="{d:DesignInstance Type=viewModels:UsersViewModel, IsDesignTimeCreatable=True}"
              ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
              ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
-
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded">
             <behaviors:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
         </behaviors:EventTrigger>
     </behaviors:Interaction.Triggers>
-    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
         <Grid Grid.Row="0"
               Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
@@ -45,7 +42,6 @@
                        Command="{Binding LoadUsersCommand}"
                        VerticalAlignment="Center" />
         </Grid>
-
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding Users}"
                   SelectedItem="{Binding SelectedUser}"
@@ -59,35 +55,48 @@
                   BorderBrush="Transparent"
                   SelectionMode="Extended"
                   SelectionUnit="FullRow"
-                  Background="{DynamicResource ControlFillColorDefaultBrush}">
+                  Background="{DynamicResource ControlFillColorDefaultBrush}"
+                  ColumnWidth="SizeToHeader">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID"
                                     Binding="{Binding UserId}"
                                     IsReadOnly="True"
-                                    Width="50" />
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Логин"
                                     Binding="{Binding Login}"
-                                    Width="120" />
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Имя"
                                     Binding="{Binding FullName}"
-                                    Width="180" />
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Email"
                                     Binding="{Binding Email}"
-                                    Width="180" />
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Телефон"
                                     Binding="{Binding Phone}"
-                                    Width="120" />
+                                    Width="Auto" />
                 <DataGridTextColumn Header="Роль"
                                     Binding="{Binding Role.RoleName}"
                                     IsReadOnly="True"
-                                    Width="100" />
+                                    Width="Auto" />
                 <DataGridCheckBoxColumn Header="Активен"
                                         Binding="{Binding IsActive}"
-                                        Width="60" />
+                                        Width="Auto" />
                 <DataGridTextColumn Header="Создан"
                                     Binding="{Binding CreatedDate, StringFormat=\{0:dd.MM.yyyy\}}"
                                     IsReadOnly="True"
-                                    Width="100" />
+                                    Width="Auto" />
+                <DataGridTemplateColumn Header="Действия"
+                                        Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ui:Button
+                                Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                CommandParameter="{Binding}"
+                                Appearance="Danger"
+                                Content="Удалить" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

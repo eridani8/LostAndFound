@@ -10,18 +10,24 @@ namespace LostAndFound.ViewModels;
 
 public partial class MainWindowViewModel(
     INavigationService navigationService,
-    INavigationViewPageProvider navigationViewPageProvider) : ObservableObject
+    INavigationViewPageProvider navigationViewPageProvider,
+    ISnackbarService snackbarService,
+    IContentDialogService dialogService) : ObservableObject
 {
     public ObservableCollection<NavigationViewItem> MenuItems { get; } = [];
 
     [RelayCommand]
-    private void WindowLoaded(NavigationView navigationView)
+    private void WindowLoaded(FluentWindow window)
     {
+        if (window is not MainWindow mainWindow) return;
         if (App.CurrentUser is not { } user) return;
         if (user.Role is not { } role) return;
         
-        navigationView.SetPageProviderService(navigationViewPageProvider);
-        navigationService.SetNavigationControl(navigationView);
+        mainWindow.NavigationView.SetPageProviderService(navigationViewPageProvider);
+        navigationService.SetNavigationControl(mainWindow.NavigationView);
+        
+        dialogService.SetDialogHost(mainWindow.ContentDialog);
+        snackbarService.SetSnackbarPresenter(mainWindow.SnackbarPresenter);
 
         Type? homePage;
         

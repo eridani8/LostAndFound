@@ -12,7 +12,6 @@
                  ResizeMode="NoResize"
                  d:DataContext="{d:DesignInstance viewModels:LoginViewModel, IsDesignTimeCreatable=True}"
                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                 WindowBackdropType="Mica"
                  WindowCornerPreference="Round"
                  WindowStartupLocation="CenterScreen"
                  ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
