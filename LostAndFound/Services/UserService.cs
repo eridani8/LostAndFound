@@ -5,6 +5,19 @@ using LostAndFound.Models;
 
 namespace LostAndFound.Services;
 
+public interface IUserService
+{
+    Task<IEnumerable<User>> GetAllUsersAsync();
+    
+    Task<User?> GetUserByIdAsync(int id);
+    
+    Task<User?> AuthenticateAsync(string login, string password);
+    
+    Task<int> AddUserAsync(User user, string password, int loggedInUserId);
+    
+    Task<bool> UpdateUserAsync(User user, int loggedInUserId);
+}
+
 public class UserService(UserRepository userRepository, ActionLogRepository actionLogRepository)
     : IUserService
 {
@@ -27,7 +40,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
             return null;
         }
 
-        var passwordHash = HashPassword(password);
+        var passwordHash = password.HashPassword();
 
         if (user.PasswordHash != passwordHash)
         {
@@ -48,7 +61,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
 
     public async Task<int> AddUserAsync(User user, string password, int loggedInUserId)
     {
-        user.PasswordHash = HashPassword(password);
+        user.PasswordHash = password.HashPassword();
 
         user.IsActive = true;
         user.CreatedDate = DateTime.Now;
@@ -94,73 +107,5 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
         }
 
         return result;
-    }
-
-    public async Task<bool> ChangePasswordAsync(int userId, string newPassword, int loggedInUserId)
-    {
-        var user = await userRepository.GetByIdAsync(userId);
-
-        if (user == null)
-        {
-            return false;
-        }
-
-        user.PasswordHash = HashPassword(newPassword);
-
-        var result = await userRepository.UpdateAsync(user);
-
-        if (result)
-        {
-            await actionLogRepository.AddAsync(
-                new ActionLog
-                {
-                    UserId = loggedInUserId,
-                    ActionType = "Смена пароля",
-                    Details = $"Пароль изменен: {user.FullName}"
-                }
-            );
-        }
-
-        return result;
-    }
-
-    public async Task<bool> DeactivateUserAsync(int userId, int loggedInUserId)
-    {
-        var user = await userRepository.GetByIdAsync(userId);
-
-        if (user == null)
-        {
-            return false;
-        }
-
-        if (userId == loggedInUserId)
-        {
-            return false;
-        }
-
-        user.IsActive = false;
-
-        var result = await userRepository.UpdateAsync(user);
-
-        if (result)
-        {
-            await actionLogRepository.AddAsync(
-                new ActionLog
-                {
-                    UserId = loggedInUserId,
-                    ActionType = "Деактивация пользователя",
-                    Details = $"Пользователь деактивирован: {user.FullName}"
-                }
-            );
-        }
-
-        return result;
-    }
-
-    private static string HashPassword(string password)
-    {
-        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-        var hash = Convert.ToHexStringLower(hashBytes);
-        return hash;
     }
 }
