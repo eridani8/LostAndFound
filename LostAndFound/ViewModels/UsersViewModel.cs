@@ -9,14 +9,16 @@ using Wpf.Ui.Extensions;
 
 namespace LostAndFound.ViewModels;
 
-public partial class UsersViewModel(UserRepository userRepository, ISnackbarService snackbarService, IContentDialogService dialogService)
+public partial class UsersViewModel(
+    UserRepository userRepository,
+    ISnackbarService snackbarService,
+    IContentDialogService dialogService,
+    ActionLogRepository logRepository)
     : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<User> _users = [];
+    [ObservableProperty] private ObservableCollection<User> _users = [];
 
-    [ObservableProperty]
-    private User? _selectedUser;
+    [ObservableProperty] private User? _selectedUser;
 
     [RelayCommand]
     private async Task LoadUsersAsync()
@@ -39,7 +41,7 @@ public partial class UsersViewModel(UserRepository userRepository, ISnackbarServ
             snackbarService.Show("Ошибка", "Нельзя удалить root администратора", ControlAppearance.Danger);
             return;
         }
-        
+
         var dialog = new ContentDialog
         {
             Title = "Подтверждение удаления",
@@ -58,6 +60,13 @@ public partial class UsersViewModel(UserRepository userRepository, ISnackbarServ
             await userRepository.DeleteAsync(user.UserId);
             Users.Remove(user);
             snackbarService.Show("Успех", "Пользователь успешно удален", ControlAppearance.Success);
+            await logRepository.AddAsync(
+                new ActionLog
+                {
+                    ActionType = "RemoveUser",
+                    Details = "Пользователь удален"
+                }
+            );
         }
         catch (Exception ex)
         {

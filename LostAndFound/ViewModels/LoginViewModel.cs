@@ -48,8 +48,6 @@ public partial class LoginViewModel(IUserService userService, MainWindowViewMode
                 return;
             }
 
-            App.CurrentUser = user;
-
             var mainWindow = Application.Current.MainWindow;
             var newMainWindow = new MainWindow(mainWindowViewModel);
             Application.Current.MainWindow = newMainWindow;

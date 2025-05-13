@@ -18,7 +18,7 @@ public interface IUserService
     Task<bool> UpdateUserAsync(User user, int loggedInUserId);
 }
 
-public class UserService(UserRepository userRepository, ActionLogRepository actionLogRepository)
+public class UserService(UserRepository userRepository, ActionLogRepository logRepository)
     : IUserService
 {
     public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -46,12 +46,13 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
         {
             return null;
         }
+        
+        App.CurrentUser = user;
 
-        await actionLogRepository.AddAsync(
+        await logRepository.AddAsync(
             new ActionLog
             {
-                UserId = user.UserId,
-                ActionType = "Авторизация",
+                ActionType = "Login",
                 Details = "Пользователь авторизовался"
             }
         );
@@ -68,11 +69,10 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
 
         var userId = await userRepository.AddAsync(user);
 
-        await actionLogRepository.AddAsync(
+        await logRepository.AddAsync(
             new ActionLog
             {
-                UserId = loggedInUserId,
-                ActionType = "Новый пользователь",
+                ActionType = "AddUser",
                 Details = $"Добавлен пользователь: {user.FullName}"
             }
         );
@@ -96,11 +96,10 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
 
         if (result)
         {
-            await actionLogRepository.AddAsync(
+            await logRepository.AddAsync(
                 new ActionLog
                 {
-                    UserId = loggedInUserId,
-                    ActionType = "Обновление пользователя",
+                    ActionType = "UpdateUser",
                     Details = $"Пользователь обновлен: {user.FullName}"
                 }
             );

@@ -66,6 +66,10 @@ public class ActionLogRepository(IDatabaseConnectionFactory connectionFactory)
 
     public async Task<int> AddAsync(ActionLog entity)
     {
+        if (App.CurrentUser is not { } currentUser) return -1;
+        
+        entity.UserId = currentUser.UserId;
+        
         using var connection = connectionFactory.CreateConnection();
 
         const string sql = """
