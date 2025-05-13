@@ -17,4 +17,4 @@ public class SqlConnectionFactory(IOptions<AppSettings> settings) : IDatabaseCon
         connection.Open();
         return connection;
     }
-} 
+}

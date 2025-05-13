@@ -7,6 +7,8 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm"
+                          Version="8.4.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection"
                           Version="9.0.4" />
         <PackageReference Include="Dapper"
@@ -24,9 +26,6 @@
     </ItemGroup>
     <ItemGroup>
         <None Update="appsettings.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="appsettings.Development.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
