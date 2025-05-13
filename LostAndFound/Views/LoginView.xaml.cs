@@ -1,9 +1,9 @@
-using System.Windows;
 using LostAndFound.ViewModels;
+using Wpf.Ui.Controls;
 
 namespace LostAndFound.Views;
 
-public partial class LoginView : Window
+public partial class LoginView : FluentWindow
 {
     public LoginView(LoginViewModel viewModel)
     {
