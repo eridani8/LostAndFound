@@ -68,11 +68,6 @@ public class ActionLogRepository(IDatabaseConnectionFactory connectionFactory)
     {
         using var connection = connectionFactory.CreateConnection();
 
-        if (entity.ActionDate == DateTime.MinValue)
-        {
-            entity.ActionDate = DateTime.Now;
-        }
-
         const string sql = """
 
                         INSERT INTO ActionLog 

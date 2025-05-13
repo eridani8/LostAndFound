@@ -39,8 +39,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
             {
                 UserId = user.UserId,
                 ActionType = "Авторизация",
-                Details = "Пользователь авторизовался",
-                ActionDate = DateTime.Now,
+                Details = "Пользователь авторизовался"
             }
         );
 
@@ -61,8 +60,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
             {
                 UserId = loggedInUserId,
                 ActionType = "Новый пользователь",
-                Details = $"Добавлен пользователь: {user.FullName}",
-                ActionDate = DateTime.Now,
+                Details = $"Добавлен пользователь: {user.FullName}"
             }
         );
 
@@ -90,8 +88,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
                 {
                     UserId = loggedInUserId,
                     ActionType = "Обновление пользователя",
-                    Details = $"Пользователь обновлен: {user.FullName}",
-                    ActionDate = DateTime.Now,
+                    Details = $"Пользователь обновлен: {user.FullName}"
                 }
             );
         }
@@ -119,8 +116,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
                 {
                     UserId = loggedInUserId,
                     ActionType = "Смена пароля",
-                    Details = $"Пароль изменен: {user.FullName}",
-                    ActionDate = DateTime.Now,
+                    Details = $"Пароль изменен: {user.FullName}"
                 }
             );
         }
@@ -153,8 +149,7 @@ public class UserService(UserRepository userRepository, ActionLogRepository acti
                 {
                     UserId = loggedInUserId,
                     ActionType = "Деактивация пользователя",
-                    Details = $"Пользователь деактивирован: {user.FullName}",
-                    ActionDate = DateTime.Now,
+                    Details = $"Пользователь деактивирован: {user.FullName}"
                 }
             );
         }

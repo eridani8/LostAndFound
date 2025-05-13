@@ -2,13 +2,13 @@ namespace LostAndFound.Models;
 
 public class User
 {
-    public int UserId { get; set; }
-    public string Login { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public string FullName { get; set; } = string.Empty;
-    public string? Email { get; set; }
-    public string? Phone { get; set; }
-    public int RoleId { get; set; }
+    public int UserId { get; init; }
+    public required string Login { get; init; }
+    public required string PasswordHash { get; set; }
+    public required string FullName { get; init; }
+    public required string? Email { get; init; }
+    public required string? Phone { get; init; }
+    public required int RoleId { get; init; }
     public bool IsActive { get; set; }
     public DateTime CreatedDate { get; set; }
     
