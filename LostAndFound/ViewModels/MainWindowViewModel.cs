@@ -51,7 +51,20 @@ public partial class MainWindowViewModel(
                         typeof(UsersView)
                     )
                 );
-                MenuItems.Add(new NavigationViewItem("Категории", SymbolRegular.AppFolder24, typeof(CategoriesView)));
+                MenuItems.Add(
+                    new NavigationViewItem(
+                        "Категории",
+                        SymbolRegular.AppFolder24,
+                        typeof(CategoriesView)
+                    )
+                );
+                MenuItems.Add(
+                    new NavigationViewItem(
+                        "Возвращенные предметы",
+                        SymbolRegular.Box24,
+                        typeof(ReturnedItemsView)
+                    )
+                );
                 MenuItems.Add(
                     new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView))
                 );

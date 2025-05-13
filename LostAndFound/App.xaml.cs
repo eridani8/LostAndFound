@@ -90,6 +90,7 @@ public partial class App : Application
         services.AddSingleton<UserRepository>();
         services.AddSingleton<ActionLogRepository>();
         services.AddSingleton<CategoryRepository>();
+        services.AddSingleton<ItemReturnRepository>();
 
         services.AddSingleton<IUserService, UserService>();
 
@@ -104,11 +105,13 @@ public partial class App : Application
         services.AddSingleton<UsersViewModel>();
         services.AddSingleton<LogsViewModel>();
         services.AddSingleton<CategoriesViewModel>();
+        services.AddSingleton<ReturnedItemsViewModel>();
 
         services.AddSingleton<LoginView>();
         services.AddSingleton<MainWindow>();
         services.AddSingleton<UsersView>();
         services.AddSingleton<LogsView>();
         services.AddSingleton<CategoriesView>();
+        services.AddSingleton<ReturnedItemsView>();
     }
 }
