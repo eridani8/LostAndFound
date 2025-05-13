@@ -18,8 +18,6 @@ public partial class UsersViewModel(
 {
     [ObservableProperty] private ObservableCollection<User> _users = [];
 
-    [ObservableProperty] private User? _selectedUser;
-
     [RelayCommand]
     private async Task LoadUsersAsync()
     {

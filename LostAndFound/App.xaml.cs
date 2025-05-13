@@ -98,9 +98,11 @@ public partial class App : Application
         services.AddSingleton<LoginViewModel>();
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<UsersViewModel>();
+        services.AddSingleton<LogsViewModel>();
 
         services.AddSingleton<LoginView>();
         services.AddSingleton<MainWindow>();
         services.AddSingleton<UsersView>();
+        services.AddSingleton<LogsView>();
     }
 }

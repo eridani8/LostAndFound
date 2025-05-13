@@ -35,6 +35,7 @@ public partial class MainWindowViewModel(
         {
             case 1:
                 MenuItems.Add(new NavigationViewItem("Пользователи", SymbolRegular.People24, typeof(UsersView)));
+                MenuItems.Add(new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView)));
                 homePage = typeof(UsersView);
                 break;
             default:
