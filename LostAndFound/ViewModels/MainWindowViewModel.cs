@@ -16,32 +16,45 @@ public partial class MainWindowViewModel(
     INavigationViewPageProvider navigationViewPageProvider,
     ISnackbarService snackbarService,
     IContentDialogService dialogService,
-    ActionLogRepository logRepository) : ObservableObject
+    ActionLogRepository logRepository
+) : ObservableObject
 {
     public ObservableCollection<NavigationViewItem> MenuItems { get; } = [];
 
     [RelayCommand]
     private void WindowLoaded(FluentWindow window)
     {
-        if (window is not MainWindow mainWindow) return;
-        if (App.CurrentUser is not { } user) return;
-        if (user.Role is not { } role) return;
-        
+        if (window is not MainWindow mainWindow)
+            return;
+        if (App.CurrentUser is not { } user)
+            return;
+        if (user.Role is not { } role)
+            return;
+
         mainWindow.NavigationView.SetPageProviderService(navigationViewPageProvider);
         navigationService.SetNavigationControl(mainWindow.NavigationView);
-        
+
         mainWindow.NavigationView.Navigated += NavigationViewOnNavigated;
-        
+
         dialogService.SetDialogHost(mainWindow.ContentDialog);
         snackbarService.SetSnackbarPresenter(mainWindow.SnackbarPresenter);
 
         Type? homePage;
-        
+
         switch (role.RoleId)
         {
             case 1:
-                MenuItems.Add(new NavigationViewItem("Пользователи", SymbolRegular.People24, typeof(UsersView)));
-                MenuItems.Add(new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView)));
+                MenuItems.Add(
+                    new NavigationViewItem(
+                        "Пользователи",
+                        SymbolRegular.People24,
+                        typeof(UsersView)
+                    )
+                );
+                MenuItems.Add(new NavigationViewItem("Категории", SymbolRegular.AppFolder24, typeof(CategoriesView)));
+                MenuItems.Add(
+                    new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView))
+                );
                 homePage = typeof(UsersView);
                 break;
             default:
@@ -53,10 +66,12 @@ public partial class MainWindowViewModel(
 
     private void NavigationViewOnNavigated(NavigationView sender, NavigatedEventArgs args)
     {
-        _ = logRepository.AddAsync(new ActionLog
-        {
-            ActionType = "OpenPage",
-            Details = $"Открыл страницу {args.Page.GetType().Name}"
-        });
+        _ = logRepository.AddAsync(
+            new ActionLog
+            {
+                ActionType = "OpenPage",
+                Details = $"Открыл страницу {args.Page.GetType().Name}",
+            }
+        );
     }
 }

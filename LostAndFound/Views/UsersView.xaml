@@ -63,27 +63,27 @@
                                     Width="Auto" />
                 <DataGridTextColumn Header="Логин"
                                     Binding="{Binding Login}"
-                                    Width="Auto" />
+                                    Width="*" />
                 <DataGridTextColumn Header="Имя"
                                     Binding="{Binding FullName}"
-                                    Width="Auto" />
+                                    Width="*" />
                 <DataGridTextColumn Header="Email"
                                     Binding="{Binding Email}"
-                                    Width="Auto" />
+                                    Width="*" />
                 <DataGridTextColumn Header="Телефон"
                                     Binding="{Binding Phone}"
-                                    Width="Auto" />
+                                    Width="*" />
                 <DataGridTextColumn Header="Роль"
                                     Binding="{Binding Role.RoleName}"
                                     IsReadOnly="True"
-                                    Width="Auto" />
+                                    Width="*" />
                 <DataGridCheckBoxColumn Header="Активен"
                                         Binding="{Binding IsActive}"
                                         Width="Auto" />
                 <DataGridTextColumn Header="Создан"
                                     Binding="{Binding CreatedDate, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"
                                     IsReadOnly="True"
-                                    Width="Auto" />
+                                    Width="*" />
                 <DataGridTemplateColumn Header="Действия"
                                         Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
