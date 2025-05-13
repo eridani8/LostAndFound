@@ -4,9 +4,91 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:LostAndFound.Views"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:viewModels="clr-namespace:LostAndFound.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance }">
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             d:DataContext="{d:DesignInstance Type=viewModels:UsersViewModel, IsDesignTimeCreatable=True}"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    
     <Grid Margin="20">
-        <TextBlock>users</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0"
+              Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBlock Grid.Column="0"
+                          Text="Управление пользователями"
+                          FontSize="24"
+                          FontWeight="Medium"
+                          VerticalAlignment="Center"
+                          Foreground="AliceBlue" />
+            <ui:Button Grid.Column="1"
+                       Content="Обновить"
+                       Icon="ArrowClockwise24"
+                       Appearance="Primary"
+                       Command="{Binding LoadUsersCommand}"
+                       VerticalAlignment="Center" />
+        </Grid>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Users}"
+                  SelectedItem="{Binding SelectedUser}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  BorderThickness="1"
+                  GridLinesVisibility="None"
+                  BorderBrush="Transparent"
+                  SelectionMode="Extended"
+                  SelectionUnit="FullRow"
+                  Background="{DynamicResource ControlFillColorDefaultBrush}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding UserId}"
+                                    IsReadOnly="True"
+                                    Width="50" />
+                <DataGridTextColumn Header="Логин"
+                                    Binding="{Binding Login}"
+                                    Width="120" />
+                <DataGridTextColumn Header="Имя"
+                                    Binding="{Binding FullName}"
+                                    Width="180" />
+                <DataGridTextColumn Header="Email"
+                                    Binding="{Binding Email}"
+                                    Width="180" />
+                <DataGridTextColumn Header="Телефон"
+                                    Binding="{Binding Phone}"
+                                    Width="120" />
+                <DataGridTextColumn Header="Роль"
+                                    Binding="{Binding Role.RoleName}"
+                                    IsReadOnly="True"
+                                    Width="100" />
+                <DataGridCheckBoxColumn Header="Активен"
+                                        Binding="{Binding IsActive}"
+                                        Width="60" />
+                <DataGridTextColumn Header="Создан"
+                                    Binding="{Binding CreatedDate, StringFormat=\{0:dd.MM.yyyy\}}"
+                                    IsReadOnly="True"
+                                    Width="100" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

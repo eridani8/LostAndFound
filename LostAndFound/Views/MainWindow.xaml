@@ -7,10 +7,16 @@
                  xmlns:local="clr-namespace:LostAndFound"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:viewModels="clr-namespace:LostAndFound.ViewModels"
-                 xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                  mc:Ignorable="d"
-                 Title="MainWindow" Height="800" Width="1200" WindowStartupLocation="CenterScreen"
-                 d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+                 Title="MainWindow" Height="800" Width="1200"
+                 d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel, IsDesignTimeCreatable=True}"
+                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                 WindowBackdropType="Mica"
+                 WindowCornerPreference="Round"
+                 WindowStartupLocation="CenterScreen"
+                 ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+                 ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                 ExtendsContentIntoTitleBar="True">
 
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded">

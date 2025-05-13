@@ -9,9 +9,15 @@
                  Title="Авторизация"
                  Height="320"
                  Width="400"
-                 WindowStartupLocation="CenterScreen"
                  ResizeMode="NoResize"
-                 d:DataContext="{d:DesignInstance viewModels:LoginViewModel}">
+                 d:DataContext="{d:DesignInstance viewModels:LoginViewModel, IsDesignTimeCreatable=True}"
+                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                 WindowBackdropType="Mica"
+                 WindowCornerPreference="Round"
+                 WindowStartupLocation="CenterScreen"
+                 ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+                 ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                 ExtendsContentIntoTitleBar="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
