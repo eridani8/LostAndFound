@@ -15,7 +15,7 @@ public class ActionLogRepository(IDatabaseConnectionFactory connectionFactory)
                         SELECT l.*, u.UserId AS User_UserId, u.*
                         FROM ActionLog l
                         LEFT JOIN Users u ON l.UserId = u.UserId
-                        ORDER BY l.ActionDate DESC
+                        ORDER BY l.LogId DESC
             """;
 
         var logDictionary = new Dictionary<int, ActionLog>();

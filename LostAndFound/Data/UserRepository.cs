@@ -15,7 +15,7 @@ public class UserRepository(IDatabaseConnectionFactory connectionFactory) : IRep
                         SELECT u.*, r.RoleId AS Role_RoleId, r.*
                         FROM Users u
                         LEFT JOIN Roles r ON u.RoleId = r.RoleId
-                        ORDER BY u.FullName
+                        ORDER BY u.UserId DESC
             """;
 
         var userDictionary = new Dictionary<int, User>();
