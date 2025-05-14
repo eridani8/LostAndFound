@@ -1,0 +1,22 @@
+<UserControl x:Class="LostAndFound.Views.Dialogs.CreateUserDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LostAndFound.Views"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ScrollViewer Margin="20">
+        <StackPanel>
+            <ui:TextBox x:Name="LoginTextBox" Margin="0,0,0,10" PlaceholderText="Логин" />
+            <ui:PasswordBox x:Name="PasswordBox" Margin="0,0,0,10" PlaceholderText="Пароль" />
+            <ui:TextBox x:Name="FullNameTextBox" Margin="0,0,0,10" PlaceholderText="Имя" />
+            <ui:TextBox x:Name="EmailTextBox" Margin="0,0,0,10" PlaceholderText="Email" />
+            <ui:TextBox x:Name="PhoneTextBox" Margin="0,0,0,10" PlaceholderText="Телефон" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

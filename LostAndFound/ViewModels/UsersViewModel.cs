@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LostAndFound.Data;
 using LostAndFound.Models;
+using LostAndFound.Views;
+using LostAndFound.Views.Dialogs;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
@@ -13,10 +15,11 @@ public partial class UsersViewModel(
     UserRepository userRepository,
     ISnackbarService snackbarService,
     IContentDialogService dialogService,
-    ActionLogRepository logRepository)
-    : ObservableObject
+    ActionLogRepository logRepository
+) : ObservableObject
 {
-    [ObservableProperty] private ObservableCollection<User> _users = [];
+    [ObservableProperty]
+    private ObservableCollection<User> _users = [];
 
     [RelayCommand]
     private async Task LoadUsersAsync()
@@ -32,11 +35,76 @@ public partial class UsersViewModel(
     }
 
     [RelayCommand]
+    private async Task CreateUser()
+    {
+        var createUserControl = new CreateUserDialog();
+
+        var dialog = new ContentDialog
+        {
+            Title = "Создание пользователя",
+            Content = createUserControl,
+            CloseButtonText = "Отмена",
+            PrimaryButtonText = "Создать",
+            DefaultButton = ContentDialogButton.Primary,
+        };
+
+        var result = await dialogService.ShowAsync(dialog, CancellationToken.None);
+
+        if (result != ContentDialogResult.Primary)
+            return;
+
+        var newUser = createUserControl.GetUserData();
+        if (newUser == null)
+        {
+            snackbarService.Show(
+                "Ошибка",
+                "Заполните все обязательные поля",
+                ControlAppearance.Danger
+            );
+            return;
+        }
+
+        var password = createUserControl.GetPassword();
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            snackbarService.Show("Ошибка", "Пароль не может быть пустым", ControlAppearance.Danger);
+            return;
+        }
+
+        try
+        {
+            // Используем расширение для хеширования пароля
+            newUser.PasswordHash = password.HashPassword();
+
+            var userId = await userRepository.AddAsync(newUser);
+            var createdUser = await userRepository.GetByIdAsync(userId) ?? newUser;
+            Users.Insert(0, createdUser);
+
+            snackbarService.Show("Успех", "Пользователь успешно создан", ControlAppearance.Success);
+            await logRepository.AddAsync(
+                new ActionLog { ActionType = "CreateUser", Details = "Создан новый пользователь" }
+            );
+        }
+        catch (Exception ex)
+        {
+            snackbarService.Show(
+                "Ошибка",
+                $"Не удалось создать пользователя: {ex.Message}",
+                ControlAppearance.Danger
+            );
+        }
+    }
+
+    [RelayCommand]
     private async Task DeleteUser(User user)
     {
         if (user.Login == "root")
         {
-            snackbarService.Show("Ошибка", "Нельзя удалить root администратора", ControlAppearance.Danger);
+            snackbarService.Show(
+                "Ошибка",
+                "Нельзя удалить root администратора",
+                ControlAppearance.Danger
+            );
             return;
         }
 
@@ -51,7 +119,8 @@ public partial class UsersViewModel(
 
         var result = await dialogService.ShowAsync(dialog, CancellationToken.None);
 
-        if (result != ContentDialogResult.Primary) return;
+        if (result != ContentDialogResult.Primary)
+            return;
 
         try
         {
@@ -59,11 +128,7 @@ public partial class UsersViewModel(
             Users.Remove(user);
             snackbarService.Show("Успех", "Пользователь успешно удален", ControlAppearance.Success);
             await logRepository.AddAsync(
-                new ActionLog
-                {
-                    ActionType = "RemoveUser",
-                    Details = "Пользователь удален"
-                }
+                new ActionLog { ActionType = "RemoveUser", Details = "Пользователь удален" }
             );
         }
         catch (Exception ex)
