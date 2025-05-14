@@ -1,0 +1,29 @@
+<UserControl x:Class="LostAndFound.Views.Dialogs.CreateStorageLocationDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LostAndFound.Views.Dialogs"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="400"
+             d:DesignWidth="600"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ScrollViewer Margin="20">
+        <StackPanel>
+            <ui:TextBox x:Name="LocationNameInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Название места хранения" />
+            <ui:TextBox x:Name="AddressInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Адрес" />
+            <ui:TextBox x:Name="ContactPhoneInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Контактный телефон (необязательно)" />
+            <ui:TextBox x:Name="WorkingHoursInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Время работы (необязательно)" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

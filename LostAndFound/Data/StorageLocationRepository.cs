@@ -4,13 +4,13 @@ using LostAndFound.Services;
 
 namespace LostAndFound.Data;
 
-public abstract class StorageLocationRepository(IDatabaseConnectionFactory connectionFactory)
+public class StorageLocationRepository(IDatabaseConnectionFactory connectionFactory)
     : IRepository<StorageLocation>
 {
     public async Task<IEnumerable<StorageLocation>> GetAllAsync()
     {
         using var connection = connectionFactory.CreateConnection();
-        const string sql = "SELECT * FROM StorageLocations ORDER BY LocationName";
+        const string sql = "SELECT * FROM StorageLocations ORDER BY StorageLocationId DESC";
 
         return await connection.QueryAsync<StorageLocation>(sql);
     }

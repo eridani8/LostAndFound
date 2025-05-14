@@ -73,6 +73,13 @@ public partial class MainWindowViewModel(
                     )
                 );
                 MenuItems.Add(
+                    new NavigationViewItem(
+                        "Места хранения",
+                        SymbolRegular.FolderOpen24,
+                        typeof(StorageLocationsView)
+                    )
+                );
+                MenuItems.Add(
                     new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView))
                 );
                 homePage = typeof(UsersView);

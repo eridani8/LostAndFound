@@ -91,6 +91,7 @@ public partial class App : Application
         services.AddSingleton<CategoryRepository>();
         services.AddSingleton<ItemReturnRepository>();
         services.AddSingleton<LostItemRepository>();
+        services.AddSingleton<StorageLocationRepository>();
 
         services.AddSingleton<IUserService, UserService>();
 
@@ -107,6 +108,7 @@ public partial class App : Application
         services.AddSingleton<CategoriesViewModel>();
         services.AddSingleton<ReturnedItemsViewModel>();
         services.AddSingleton<LostItemsViewModel>();
+        services.AddSingleton<StorageLocationsViewModel>();
 
         services.AddSingleton<LoginView>();
         services.AddSingleton<MainWindow>();
@@ -115,5 +117,6 @@ public partial class App : Application
         services.AddSingleton<CategoriesView>();
         services.AddSingleton<ReturnedItemsView>();
         services.AddSingleton<LostItemsView>();
+        services.AddSingleton<StorageLocationsView>();
     }
 }
