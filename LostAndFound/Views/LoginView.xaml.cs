@@ -10,4 +10,12 @@ public partial class LoginView : FluentWindow
         InitializeComponent();
         DataContext = viewModel;
     }
+
+    private void PasswordBox_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (DataContext is LoginViewModel viewModel && sender is PasswordBox passwordBox)
+        {
+            viewModel.ValidatePassword(passwordBox.Password);
+        }
+    }
 }
