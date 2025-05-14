@@ -96,6 +96,31 @@ public class NullToInverseBoolConverter : IValueConverter
     }
 }
 
+public class StringEqualityToBooleanConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string valueString && parameter is string parameterString)
+        {
+            return valueString.Equals(parameterString, StringComparison.OrdinalIgnoreCase)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        return Visibility.Collapsed;
+    }
+
+    public object ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture
+    )
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public class RoleToVisibilityConverter : IValueConverter
 {
     public bool Role2Visible { get; set; } = true;

@@ -6,14 +6,28 @@
              xmlns:local="clr-namespace:LostAndFound.Views"
              xmlns:viewModels="clr-namespace:LostAndFound.ViewModels"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:converters="clr-namespace:LostAndFound"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="800"
              d:DesignWidth="1200"
              d:DataContext="{d:DesignInstance Type=viewModels:ReportsViewModel, IsDesignTimeCreatable=True}"
              ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
              ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadCategoriesCommand}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        <system:String x:Key="ReportTypeCategory">По типу вещи</system:String>
+        <converters:StringEqualityToBooleanConverter x:Key="StringEqualityConverter" />
+    </UserControl.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -38,7 +52,28 @@
                        Appearance="Primary"
                        Margin="10,0,0,0" />
         </StackPanel>
-        <DataGrid Grid.Row="1"
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,10"
+                    Visibility="{Binding SelectedReportType,
+&#xA;                    Converter={StaticResource StringEqualityConverter}, 
+&#xA;                    ConverterParameter={StaticResource ReportTypeCategory}, 
+&#xA;                    Mode=OneWay, 
+&#xA;                    FallbackValue=Collapsed}">
+            <TextBlock Text="Выберите категорию:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,10,0"
+                       Foreground="AliceBlue" />
+            <ComboBox Width="250"
+                      ItemsSource="{Binding Categories}"
+                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                      DisplayMemberPath="CategoryName"
+                      Margin="0,0,10,0" />
+            <ui:Button Content="Применить"
+                       Command="{Binding GenerateReportCommand}"
+                       Appearance="Primary" />
+        </StackPanel>
+        <DataGrid Grid.Row="2"
                   ItemsSource="{Binding ReportResults}"
                   AutoGenerateColumns="True"
                   CanUserAddRows="False"
