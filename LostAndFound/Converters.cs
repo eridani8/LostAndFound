@@ -95,3 +95,54 @@ public class NullToInverseBoolConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+public class RoleToVisibilityConverter : IValueConverter
+{
+    public bool Role2Visible { get; set; } = true;
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is int roleId)
+        {
+            if (roleId == 2 && !Role2Visible)
+                return Visibility.Collapsed;
+
+            return Visibility.Visible;
+        }
+
+        return Visibility.Visible;
+    }
+
+    public object ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture
+    )
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class RoleToReadOnlyConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is int roleId)
+        {
+            return roleId == 2;
+        }
+
+        return false;
+    }
+
+    public object ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture
+    )
+    {
+        throw new NotImplementedException();
+    }
+}

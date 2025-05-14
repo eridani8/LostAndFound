@@ -118,4 +118,10 @@ public partial class MainWindowViewModel(
             }
         );
     }
+
+    [RelayCommand]
+    private void Close()
+    {
+        Application.Current.Shutdown();
+    }
 }

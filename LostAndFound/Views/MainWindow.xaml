@@ -39,6 +39,10 @@
                 <ui:NavigationView.MenuItemsSource>
                     <Binding Path="MenuItems" />
                 </ui:NavigationView.MenuItemsSource>
+                <ui:NavigationView.FooterMenuItems>
+                    <ui:NavigationViewItem Icon="{ui:SymbolIcon ArrowExit20}" Content="Выход"
+                                           Command="{Binding CloseCommand}" />
+                </ui:NavigationView.FooterMenuItems>
             </ui:NavigationView>
             <ContentPresenter Grid.Row="0"
                               x:Name="ContentDialog" />

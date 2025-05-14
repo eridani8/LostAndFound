@@ -7,6 +7,7 @@
              xmlns:viewModels="clr-namespace:LostAndFound.ViewModels"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:lostAndFound="clr-namespace:LostAndFound"
              mc:Ignorable="d"
              d:DesignHeight="800"
              d:DesignWidth="1200"
@@ -42,7 +43,15 @@
                        Appearance="Primary"
                        Command="{Binding CreateLostItemCommand}"
                        Margin="0,0,10,0"
-                       VerticalAlignment="Center" />
+                       VerticalAlignment="Center">
+                <ui:Button.Visibility>
+                    <Binding Path="CurrentUserRoleId">
+                        <Binding.Converter>
+                            <lostAndFound:RoleToVisibilityConverter Role2Visible="False" />
+                        </Binding.Converter>
+                    </Binding>
+                </ui:Button.Visibility>
+            </ui:Button>
         </Grid>
         <Grid Grid.Row="1"
               Margin="0,0,0,10">
@@ -163,16 +172,52 @@
                                     Width="Auto" />
                 <DataGridTextColumn Header="Название"
                                     Binding="{Binding ItemName, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" />
+                                    Width="Auto">
+                    <DataGridTextColumn.IsReadOnly>
+                        <Binding Path="DataContext.CurrentUserRoleId"
+                                 RelativeSource="{RelativeSource AncestorType=DataGrid}">
+                            <Binding.Converter>
+                                <lostAndFound:RoleToReadOnlyConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.IsReadOnly>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Описание"
                                     Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" />
+                                    Width="Auto">
+                    <DataGridTextColumn.IsReadOnly>
+                        <Binding Path="DataContext.CurrentUserRoleId"
+                                 RelativeSource="{RelativeSource AncestorType=DataGrid}">
+                            <Binding.Converter>
+                                <lostAndFound:RoleToReadOnlyConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.IsReadOnly>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Дата находки"
                                     Binding="{Binding FoundDate, StringFormat={}{0:dd.MM.yyyy}}"
-                                    Width="Auto" />
+                                    Width="Auto">
+                    <DataGridTextColumn.IsReadOnly>
+                        <Binding Path="DataContext.CurrentUserRoleId"
+                                 RelativeSource="{RelativeSource AncestorType=DataGrid}">
+                            <Binding.Converter>
+                                <lostAndFound:RoleToReadOnlyConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.IsReadOnly>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Где найден"
                                     Binding="{Binding FoundLocation, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" />
+                                    Width="Auto">
+                    <DataGridTextColumn.IsReadOnly>
+                        <Binding Path="DataContext.CurrentUserRoleId"
+                                 RelativeSource="{RelativeSource AncestorType=DataGrid}">
+                            <Binding.Converter>
+                                <lostAndFound:RoleToReadOnlyConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.IsReadOnly>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Категория"
                                     Binding="{Binding Category.CategoryName}"
                                     IsReadOnly="True"
@@ -183,10 +228,28 @@
                                     Width="Auto" />
                 <DataGridTextColumn Header="Статус"
                                     Binding="{Binding Status, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" />
+                                    Width="Auto">
+                    <DataGridTextColumn.IsReadOnly>
+                        <Binding Path="DataContext.CurrentUserRoleId"
+                                 RelativeSource="{RelativeSource AncestorType=DataGrid}">
+                            <Binding.Converter>
+                                <lostAndFound:RoleToReadOnlyConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.IsReadOnly>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Путь к изображению"
                                     Binding="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" />
+                                    Width="Auto">
+                    <DataGridTextColumn.IsReadOnly>
+                        <Binding Path="DataContext.CurrentUserRoleId"
+                                 RelativeSource="{RelativeSource AncestorType=DataGrid}">
+                            <Binding.Converter>
+                                <lostAndFound:RoleToReadOnlyConverter />
+                            </Binding.Converter>
+                        </Binding>
+                    </DataGridTextColumn.IsReadOnly>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Кто зарегистрировал"
                                     Binding="{Binding RegisteredByUser.Login}"
                                     IsReadOnly="True"
@@ -202,7 +265,16 @@
                             <ui:Button Command="{Binding DataContext.DeleteLostItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                        CommandParameter="{Binding}"
                                        Appearance="Danger"
-                                       Content="Удалить" />
+                                       Content="Удалить">
+                                <ui:Button.Visibility>
+                                    <Binding Path="DataContext.CurrentUserRoleId"
+                                             RelativeSource="{RelativeSource AncestorType=UserControl}">
+                                        <Binding.Converter>
+                                            <lostAndFound:RoleToVisibilityConverter Role2Visible="False" />
+                                        </Binding.Converter>
+                                    </Binding>
+                                </ui:Button.Visibility>
+                            </ui:Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

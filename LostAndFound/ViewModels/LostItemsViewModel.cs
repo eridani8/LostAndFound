@@ -19,27 +19,40 @@ public partial class LostItemsViewModel(
     ActionLogRepository logRepository
 ) : ObservableObject
 {
-    [ObservableProperty] private ObservableCollection<LostItem> _lostItems = [];
+    [ObservableProperty]
+    private ObservableCollection<LostItem> _lostItems = [];
 
-    [ObservableProperty] private string _itemsCountText = "Найдено предметов: 0";
+    [ObservableProperty]
+    private string _itemsCountText = "Найдено предметов: 0";
 
-    [ObservableProperty] private ObservableCollection<Category> _categories = [];
+    [ObservableProperty]
+    private ObservableCollection<Category> _categories = [];
 
-    [ObservableProperty] private Category? _selectedCategory;
+    [ObservableProperty]
+    private Category? _selectedCategory;
 
-    [ObservableProperty] private ObservableCollection<string> _statuses = ["Waiting", "Found", "Returned"];
+    [ObservableProperty]
+    private ObservableCollection<string> _statuses = ["Waiting", "Found", "Returned"];
 
-    [ObservableProperty] private string? _selectedStatus;
+    [ObservableProperty]
+    private string? _selectedStatus;
 
-    [ObservableProperty] private string _searchTerm = string.Empty;
+    [ObservableProperty]
+    private string _searchTerm = string.Empty;
 
-    [ObservableProperty] private DateTime? _fromDate;
+    [ObservableProperty]
+    private DateTime? _fromDate;
 
-    [ObservableProperty] private DateTime? _toDate;
+    [ObservableProperty]
+    private DateTime? _toDate;
 
-    [ObservableProperty] private ObservableCollection<string> _locations = [];
+    [ObservableProperty]
+    private ObservableCollection<string> _locations = [];
 
-    [ObservableProperty] private string? _selectedLocation;
+    [ObservableProperty]
+    private string? _selectedLocation;
+
+    public int CurrentUserRoleId => App.CurrentUser?.RoleId ?? 0;
 
     [RelayCommand]
     private async Task WindowLoaded()
@@ -152,6 +165,16 @@ public partial class LostItemsViewModel(
         if (App.CurrentUser is not { } currentUser)
             return;
 
+        if (currentUser.RoleId == 2)
+        {
+            snackbarService.Show(
+                "Доступ запрещен",
+                "У вас нет прав на создание предметов",
+                ControlAppearance.Caution
+            );
+            return;
+        }
+
         var createLostItemControl = new CreateLostItemDialog();
 
         var dialog = new ContentDialog
@@ -213,6 +236,19 @@ public partial class LostItemsViewModel(
     [RelayCommand]
     private async Task UpdateLostItem(DataGridCellEditEndingEventArgs e)
     {
+        if (App.CurrentUser?.RoleId == 2)
+        {
+            snackbarService.Show(
+                "Доступ запрещен",
+                "У вас нет прав на изменение данных",
+                ControlAppearance.Caution
+            );
+
+            var items = await lostItemRepository.GetAllAsync();
+            LostItems = new ObservableCollection<LostItem>(items);
+            return;
+        }
+
         if (e.EditAction == DataGridEditAction.Commit)
         {
             if (e.Row.Item is LostItem item)
@@ -282,6 +318,16 @@ public partial class LostItemsViewModel(
     [RelayCommand]
     private async Task DeleteLostItem(LostItem item)
     {
+        if (App.CurrentUser?.RoleId == 2)
+        {
+            snackbarService.Show(
+                "Доступ запрещен",
+                "У вас нет прав на удаление предметов",
+                ControlAppearance.Caution
+            );
+            return;
+        }
+
         var dialog = new ContentDialog
         {
             Title = "Подтверждение удаления",
