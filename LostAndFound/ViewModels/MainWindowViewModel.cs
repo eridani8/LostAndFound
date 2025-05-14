@@ -87,6 +87,13 @@ public partial class MainWindowViewModel(
                     )
                 );
                 MenuItems.Add(
+                    new NavigationViewItem(
+                        "Аналитика",
+                        SymbolRegular.DataHistogram24,
+                        typeof(ChartsView)
+                    )
+                );
+                MenuItems.Add(
                     new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView))
                 );
                 homePage = typeof(UsersView);

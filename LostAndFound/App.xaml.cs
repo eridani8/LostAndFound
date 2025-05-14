@@ -128,6 +128,7 @@ public partial class App : Application
         services.AddSingleton<LostItemsViewModel>();
         services.AddSingleton<StorageLocationsViewModel>();
         services.AddSingleton<ReportsViewModel>();
+        services.AddSingleton<ChartsViewModel>();
 
         services.AddSingleton<LoginView>();
         services.AddSingleton<MainWindow>();
@@ -138,5 +139,6 @@ public partial class App : Application
         services.AddSingleton<LostItemsView>();
         services.AddSingleton<StorageLocationsView>();
         services.AddSingleton<ReportsView>();
+        services.AddSingleton<ChartsView>();
     }
 }
