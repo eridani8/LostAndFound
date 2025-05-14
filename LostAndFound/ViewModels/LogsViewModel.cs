@@ -11,15 +11,9 @@ public partial class LogsViewModel(ActionLogRepository logRepository) : Observab
     [ObservableProperty] private ObservableCollection<ActionLog> _logs = [];
     
     [RelayCommand]
-    private async Task LoadLogsAsync()
+    private async Task WindowLoaded()
     {
         var logs = await logRepository.GetAllAsync();
         Logs = new ObservableCollection<ActionLog>(logs);
-    }
-    
-    [RelayCommand]
-    private async Task WindowLoaded()
-    {
-        await LoadLogsAsync();
     }
 }

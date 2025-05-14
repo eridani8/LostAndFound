@@ -35,12 +35,6 @@
                           FontWeight="Medium"
                           VerticalAlignment="Center"
                           Foreground="AliceBlue" />
-            <ui:Button Grid.Column="1"
-                       Content="Обновить"
-                       Icon="ArrowClockwise24"
-                       Appearance="Primary"
-                       Command="{Binding LoadLogsCommand}"
-                       VerticalAlignment="Center" />
         </Grid>
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding Logs}"

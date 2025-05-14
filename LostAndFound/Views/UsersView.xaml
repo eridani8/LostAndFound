@@ -39,19 +39,12 @@
             <ui:Button Grid.Column="1"
                        Content="Создать"
                        Icon="PersonAdd24"
-                       Appearance="Success"
+                       Appearance="Primary"
                        Command="{Binding CreateUserCommand}"
                        Margin="0,0,10,0"
                        VerticalAlignment="Center" />
-            <ui:Button Grid.Column="2"
-                       Content="Обновить"
-                       Icon="ArrowClockwise24"
-                       Appearance="Primary"
-                       Command="{Binding LoadUsersCommand}"
-                       VerticalAlignment="Center" />
         </Grid>
         <DataGrid Grid.Row="1"
-                  x:Name="UsersDataGrid"
                   ItemsSource="{Binding Users}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"

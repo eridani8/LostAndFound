@@ -36,10 +36,11 @@
                           VerticalAlignment="Center"
                           Foreground="AliceBlue" />
             <ui:Button Grid.Column="1"
-                       Content="Обновить"
-                       Icon="ArrowClockwise24"
+                       Content="Создать"
+                       Icon="Add24"
                        Appearance="Primary"
-                       Command="{Binding LoadCategoriesCommand}"
+                       Command="{Binding CreateCategoryCommand}"
+                       Margin="0,0,10,0"
                        VerticalAlignment="Center" />
         </Grid>
         <DataGrid Grid.Row="1"
@@ -56,16 +57,22 @@
                   SelectionUnit="FullRow"
                   Background="{DynamicResource ControlFillColorDefaultBrush}"
                   ColumnWidth="SizeToHeader">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="CellEditEnding">
+                    <behaviors:InvokeCommandAction Command="{Binding UpdateCategoryCommand}"
+                                                   PassEventArgsToCommand="True" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID"
                                     Binding="{Binding CategoryId}"
                                     IsReadOnly="True"
                                     Width="Auto" />
                 <DataGridTextColumn Header="Название"
-                                    Binding="{Binding CategoryName}"
+                                    Binding="{Binding CategoryName, UpdateSourceTrigger=PropertyChanged}"
                                     Width="Auto" />
                 <DataGridTextColumn Header="Описание"
-                                    Binding="{Binding Description}"
+                                    Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                                     Width="*" />
                 <DataGridTemplateColumn Header="Действия"
                                         Width="Auto">

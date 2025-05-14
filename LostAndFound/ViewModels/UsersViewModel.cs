@@ -22,16 +22,10 @@ public partial class UsersViewModel(
     private ObservableCollection<User> _users = [];
 
     [RelayCommand]
-    private async Task LoadUsersAsync()
+    private async Task WindowLoaded()
     {
         var users = await userRepository.GetAllAsync();
         Users = new ObservableCollection<User>(users);
-    }
-
-    [RelayCommand]
-    private async Task WindowLoaded()
-    {
-        await LoadUsersAsync();
     }
 
     [RelayCommand]
@@ -153,8 +147,6 @@ public partial class UsersViewModel(
                     ControlAppearance.Danger
                 );
             }
-
-            return;
         }
         catch (Exception ex)
         {
@@ -163,7 +155,6 @@ public partial class UsersViewModel(
                 $"Не удалось обновить пользователя: {ex.Message}",
                 ControlAppearance.Danger
             );
-            return;
         }
     }
 

@@ -36,10 +36,11 @@
                           VerticalAlignment="Center"
                           Foreground="AliceBlue" />
             <ui:Button Grid.Column="1"
-                       Content="Обновить"
-                       Icon="ArrowClockwise24"
+                       Content="Регистрация возврата"
+                       Icon="ArrowExit20"
                        Appearance="Primary"
-                       Command="{Binding LoadReturnedItemsCommand}"
+                       Command="{Binding CreateItemReturnCommand}"
+                       Margin="0,0,10,0"
                        VerticalAlignment="Center" />
         </Grid>
         <DataGrid Grid.Row="1"
@@ -79,6 +80,17 @@
                 <DataGridTextColumn Header="Примечания"
                                     Binding="{Binding Notes}"
                                     Width="*" />
+                <DataGridTemplateColumn Header="Действия"
+                                        Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ui:Button Command="{Binding DataContext.DeleteItemReturnCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                       CommandParameter="{Binding}"
+                                       Appearance="Danger"
+                                       Content="Удалить" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
