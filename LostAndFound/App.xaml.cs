@@ -23,7 +23,7 @@ public partial class App : Application
     {
         _host = Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration(
-                (context, config) =>
+                (_, config) =>
                 {
                     config
                         .SetBasePath(Directory.GetCurrentDirectory())
@@ -63,6 +63,24 @@ public partial class App : Application
                         "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
                     CreatedDate = DateTime.Now,
                     RoleId = 1,
+                }
+            );
+        }
+
+        if (await usersRepository.GetByLoginAsync("supp") is null)
+        {
+            await usersRepository.AddAsync(
+                new User
+                {
+                    Login = "supp",
+                    Email = "tsuuzetsu@gmail.com",
+                    FullName = "Eridani",
+                    Phone = "+1234567890",
+                    IsActive = true,
+                    PasswordHash =
+                        "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+                    CreatedDate = DateTime.Now,
+                    RoleId = 2,
                 }
             );
         }

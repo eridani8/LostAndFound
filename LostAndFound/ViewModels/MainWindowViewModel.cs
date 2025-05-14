@@ -91,9 +91,19 @@ public partial class MainWindowViewModel(
                 );
                 homePage = typeof(UsersView);
                 break;
+            case 2:
+                MenuItems.Add(
+                    new NavigationViewItem(
+                        "Потерянные предметы",
+                        SymbolRegular.BoxSearch24,
+                        typeof(LostItemsView)
+                    )
+                );
+                homePage = typeof(LostItemsView);
+                break;
             default:
                 return;
-        } // TODO
+        }
 
         navigationService.Navigate(homePage);
     }
