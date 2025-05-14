@@ -9,7 +9,7 @@ public class LostItem
     public string FoundLocation { get; set; } = string.Empty;
     public int CategoryId { get; set; }
     public int StorageLocationId { get; set; }
-    public string Status { get; set; } = "Ожидание";
+    public string Status { get; set; } = "Waiting";
     public string? ImagePath { get; set; }
     public int RegisteredBy { get; set; }
     public DateTime RegistrationDate { get; set; }

@@ -73,7 +73,7 @@ public class ItemReturnRepository(IDatabaseConnectionFactory connectionFactory) 
         const string updateItemSql = """
 
                                                  UPDATE LostItems 
-                                                 SET Status = N'Возвращен'
+                                                 SET Status = N'Returned'
                                                  WHERE ItemId = @ItemId
                                      """;
 
@@ -122,7 +122,7 @@ public class ItemReturnRepository(IDatabaseConnectionFactory connectionFactory) 
             const string updateItemSql = """
 
                                                          UPDATE LostItems 
-                                                         SET Status = N'Ожидание'
+                                                         SET Status = N'Waiting'
                                                          WHERE ItemId = @ItemId
                                          """;
 
