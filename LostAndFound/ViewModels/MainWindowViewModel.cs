@@ -80,6 +80,13 @@ public partial class MainWindowViewModel(
                     )
                 );
                 MenuItems.Add(
+                    new NavigationViewItem(
+                        "Отчёты",
+                        SymbolRegular.DocumentText24,
+                        typeof(ReportsView)
+                    )
+                );
+                MenuItems.Add(
                     new NavigationViewItem("Логи", SymbolRegular.CodeText20, typeof(LogsView))
                 );
                 homePage = typeof(UsersView);

@@ -1,0 +1,56 @@
+<UserControl x:Class="LostAndFound.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LostAndFound.Views"
+             xmlns:viewModels="clr-namespace:LostAndFound.ViewModels"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             d:DataContext="{d:DesignInstance Type=viewModels:ReportsViewModel, IsDesignTimeCreatable=True}"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,0,0,10"
+                    Grid.Row="0">
+            <ComboBox Width="250"
+                      Margin="0 0 10 0"
+                      ItemsSource="{Binding ReportTypes}"
+                      SelectedItem="{Binding SelectedReportType, Mode=TwoWay}" />
+            <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}"
+                        Margin="0 0 10 0"
+                        Width="200" />
+            <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}"
+                        Margin="0 0 10 0"
+                        Width="200" />
+            <ui:Button Content="Сформировать"
+                       Command="{Binding GenerateReportCommand}"
+                       Appearance="Primary" />
+            <ui:Button Content="Сохранить отчет"
+                       Command="{Binding SaveReportCommand}"
+                       Appearance="Secondary"
+                       Margin="10,0,0,0" />
+        </StackPanel>
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding ReportResults}"
+                  AutoGenerateColumns="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  BorderThickness="1"
+                  GridLinesVisibility="None"
+                  BorderBrush="Transparent"
+                  SelectionMode="Extended"
+                  SelectionUnit="FullRow"
+                  Background="{DynamicResource ControlFillColorDefaultBrush}"
+                  ColumnWidth="SizeToHeader" />
+    </Grid>
+</UserControl>
