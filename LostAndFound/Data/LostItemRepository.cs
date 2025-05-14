@@ -4,7 +4,7 @@ using LostAndFound.Services;
 
 namespace LostAndFound.Data;
 
-public abstract class LostItemRepository(IDatabaseConnectionFactory connectionFactory) : IRepository<LostItem>
+public class LostItemRepository(IDatabaseConnectionFactory connectionFactory) : IRepository<LostItem>
 {
     public async Task<IEnumerable<LostItem>> GetAllAsync()
     {

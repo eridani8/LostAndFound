@@ -1,0 +1,42 @@
+<UserControl x:Class="LostAndFound.Views.Dialogs.CreateLostItemDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LostAndFound.Views.Dialogs"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ScrollViewer Margin="20">
+        <StackPanel>
+            <ui:TextBox x:Name="ItemNameInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Название предмета" />
+            <ui:TextBox x:Name="DescriptionInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Описание" />
+            <DatePicker x:Name="FoundDatePicker"
+                        Margin="0,0,0,10"
+                        SelectedDateFormat="Short" />
+            <ui:TextBox x:Name="FoundLocationInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Где найден" />
+            <ui:TextBox x:Name="CategoryIdInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="ID категории" />
+            <ui:TextBox x:Name="StorageLocationIdInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="ID места хранения" />
+            <ui:TextBox x:Name="ImagePathInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Путь к изображению (необязательно)" />
+            <ui:TextBox x:Name="NotesInput"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Примечания (необязательно)"
+                        Visibility="Collapsed" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

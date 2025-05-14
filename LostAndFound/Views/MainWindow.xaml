@@ -30,7 +30,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ui:TitleBar Grid.Row="0"
-                     Title="LostAndFound" />
+                     Title="Бюро находок" />
         <Grid Grid.Row="1">
             <ui:NavigationView PaneDisplayMode="LeftMinimal"
                                IsPaneOpen="False"

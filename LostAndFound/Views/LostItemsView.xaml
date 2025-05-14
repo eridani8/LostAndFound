@@ -1,0 +1,119 @@
+<UserControl x:Class="LostAndFound.Views.LostItemsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LostAndFound.Views"
+             xmlns:viewModels="clr-namespace:LostAndFound.ViewModels"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             d:DataContext="{d:DesignInstance Type=viewModels:LostItemsViewModel, IsDesignTimeCreatable=True}"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+              Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBlock Grid.Column="0"
+                          Text="Потерянные предметы"
+                          FontSize="24"
+                          FontWeight="Medium"
+                          VerticalAlignment="Center"
+                          Foreground="AliceBlue" />
+            <ui:Button Grid.Column="1"
+                       Content="Добавить предмет"
+                       Icon="Add24"
+                       Appearance="Primary"
+                       Command="{Binding CreateLostItemCommand}"
+                       Margin="0,0,10,0"
+                       VerticalAlignment="Center" />
+        </Grid>
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding LostItems}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  BorderThickness="1"
+                  GridLinesVisibility="None"
+                  BorderBrush="Transparent"
+                  SelectionMode="Extended"
+                  SelectionUnit="FullRow"
+                  Background="{DynamicResource ControlFillColorDefaultBrush}"
+                  ColumnWidth="SizeToHeader">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="CellEditEnding">
+                    <behaviors:InvokeCommandAction Command="{Binding UpdateLostItemCommand}"
+                                                   PassEventArgsToCommand="True" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding ItemId}"
+                                    IsReadOnly="True"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Название"
+                                    Binding="{Binding ItemName, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Описание"
+                                    Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Дата находки"
+                                    Binding="{Binding FoundDate, StringFormat={}{0:dd.MM.yyyy}}"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Где найден"
+                                    Binding="{Binding FoundLocation, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Категория"
+                                    Binding="{Binding Category.CategoryName}"
+                                    IsReadOnly="True"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Место хранения"
+                                    Binding="{Binding StorageLocation.StorageLocationName}"
+                                    IsReadOnly="True"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Статус"
+                                    Binding="{Binding Status, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Путь к изображению"
+                                    Binding="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Кто зарегистрировал"
+                                    Binding="{Binding RegisteredByUser.Login}"
+                                    IsReadOnly="True"
+                                    Width="Auto" />
+                <DataGridTextColumn Header="Дата регистрации"
+                                    Binding="{Binding RegistrationDate, StringFormat={}{0:dd.MM.yyyy HH:mm:ss}}"
+                                    IsReadOnly="True"
+                                    Width="Auto" />
+                <DataGridTemplateColumn Header="Действия"
+                                        Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ui:Button Command="{Binding DataContext.DeleteLostItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                       CommandParameter="{Binding}"
+                                       Appearance="Danger"
+                                       Content="Удалить" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

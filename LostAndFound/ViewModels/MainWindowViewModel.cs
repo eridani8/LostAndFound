@@ -58,13 +58,13 @@ public partial class MainWindowViewModel(
                         typeof(CategoriesView)
                     )
                 );
-                // MenuItems.Add(
-                //     new NavigationViewItem(
-                //         "Потерянные предметы",
-                //         SymbolRegular.SpeakerBox24,
-                //         typeof(LostItemsView)
-                //     )
-                // );
+                MenuItems.Add(
+                    new NavigationViewItem(
+                        "Потерянные предметы",
+                        SymbolRegular.BoxSearch24,
+                        typeof(LostItemsView)
+                    )
+                );
                 MenuItems.Add(
                     new NavigationViewItem(
                         "Возвращенные предметы",
