@@ -35,7 +35,7 @@
                        Appearance="Primary" />
             <ui:Button Content="Сохранить отчет"
                        Command="{Binding SaveReportCommand}"
-                       Appearance="Secondary"
+                       Appearance="Primary"
                        Margin="10,0,0,0" />
         </StackPanel>
         <DataGrid Grid.Row="1"

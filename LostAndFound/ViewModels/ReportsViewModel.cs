@@ -58,40 +58,31 @@ public partial class ReportsViewModel(
     [RelayCommand]
     private async Task SaveReport()
     {
-        if (ReportResults.Count == 0)
-            return;
+        if (ReportResults.Count == 0) return;
 
         var dialog = new SaveFileDialog
         {
             Filter = "Текстовый файл (*.txt)|*.txt",
             FileName = $"{SelectedReportType}_{DateTime.Now:yyyyMMdd_HHmmss}",
         };
-        if (dialog.ShowDialog() != true)
-            return;
+        if (dialog.ShowDialog() != true) return;
         var path = dialog.FileName;
         await using var sw = new StreamWriter(path, false, Encoding.UTF8);
-        var headers = GetHeaders();
-        await sw.WriteLineAsync(string.Join(Environment.NewLine, headers));
+
+        await sw.WriteLineAsync($"{SelectedReportType}{Environment.NewLine}{StartDate.ToLongDateString()} - {EndDate.ToLongDateString()}");
+        await sw.WriteLineAsync();
+        
         foreach (var item in ReportResults)
         {
-            var row = GetRowValues(item);
-            await sw.WriteLineAsync(string.Join(Environment.NewLine, row));
+            switch (item)
+            {
+                case LostItem lostItem:
+                    await sw.WriteLineAsync(lostItem.ItemName);
+                    break;
+                case ItemReturn itemReturn:
+                    await sw.WriteLineAsync(itemReturn.LostItem.ItemName);
+                    break;
+            }
         }
-    }
-
-    private string[] GetHeaders()
-    {
-        if (ReportResults.Count == 0)
-            return [];
-        var type = ReportResults[0].GetType();
-        return type.GetProperties().Select(p => p.Name).ToArray();
-    }
-
-    private int GetColumnCount() => GetHeaders().Length;
-
-    private string[] GetRowValues(object item)
-    {
-        var type = item.GetType();
-        return type.GetProperties().Select(p => p.GetValue(item)?.ToString() ?? "").ToArray();
     }
 }
