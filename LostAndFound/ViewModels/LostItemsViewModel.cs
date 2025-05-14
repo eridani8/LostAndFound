@@ -13,19 +13,123 @@ namespace LostAndFound.ViewModels;
 
 public partial class LostItemsViewModel(
     LostItemRepository lostItemRepository,
+    CategoryRepository categoryRepository,
     ISnackbarService snackbarService,
     IContentDialogService dialogService,
     ActionLogRepository logRepository
 ) : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<LostItem> _lostItems = [];
+    [ObservableProperty] private ObservableCollection<LostItem> _lostItems = [];
+
+    [ObservableProperty] private string _itemsCountText = "Найдено предметов: 0";
+
+    [ObservableProperty] private ObservableCollection<Category> _categories = [];
+
+    [ObservableProperty] private Category? _selectedCategory;
+
+    [ObservableProperty] private ObservableCollection<string> _statuses = ["Waiting", "Found", "Returned"];
+
+    [ObservableProperty] private string? _selectedStatus;
+
+    [ObservableProperty] private string _searchTerm = string.Empty;
 
     [RelayCommand]
     private async Task WindowLoaded()
     {
         var items = await lostItemRepository.GetAllAsync();
         LostItems = new ObservableCollection<LostItem>(items);
+        ItemsCountText = $"Найдено предметов: {LostItems.Count}";
+
+        var allCategories = await categoryRepository.GetAllAsync();
+        Categories = new ObservableCollection<Category>(allCategories);
+
+        Statuses = new ObservableCollection<string>(["Все статусы", "Waiting", "Found", "Returned"]);
+    }
+
+    [RelayCommand]
+    private async Task ApplyFilters()
+    {
+        try
+        {
+            var filteredItems = await lostItemRepository.GetAllAsync();
+            var filtersApplied = false;
+
+            if (!string.IsNullOrEmpty(SearchTerm))
+            {
+                filteredItems = await lostItemRepository.SearchAsync(SearchTerm);
+                filtersApplied = true;
+            }
+
+            if (SelectedCategory != null)
+            {
+                if (filtersApplied)
+                {
+                    filteredItems = filteredItems.Where(item =>
+                        item.CategoryId == SelectedCategory.CategoryId
+                    );
+                }
+                else
+                {
+                    filteredItems = await lostItemRepository.GetByCategoryAsync(
+                        SelectedCategory.CategoryId
+                    );
+                    filtersApplied = true;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(SelectedStatus) && SelectedStatus != "Все статусы")
+            {
+                if (filtersApplied)
+                {
+                    filteredItems = filteredItems.Where(item => item.Status == SelectedStatus);
+                }
+                else
+                {
+                    filteredItems = await lostItemRepository.GetByStatusAsync(SelectedStatus);
+                    filtersApplied = true;
+                }
+            }
+
+            LostItems = new ObservableCollection<LostItem>(filteredItems);
+            ItemsCountText = $"Найдено предметов: {LostItems.Count}";
+
+            var message = filtersApplied ? "Фильтры успешно применены" : "Показаны все записи";
+
+            snackbarService.Show("Фильтрация", message, ControlAppearance.Success);
+        }
+        catch (Exception ex)
+        {
+            snackbarService.Show(
+                "Ошибка",
+                $"Не удалось применить фильтры: {ex.Message}",
+                ControlAppearance.Danger
+            );
+        }
+    }
+
+    [RelayCommand]
+    private async Task ResetFilters()
+    {
+        try
+        {
+            SearchTerm = string.Empty;
+            SelectedCategory = null;
+            SelectedStatus = null;
+
+            var items = await lostItemRepository.GetAllAsync();
+            LostItems = new ObservableCollection<LostItem>(items);
+            ItemsCountText = $"Найдено предметов: {LostItems.Count}";
+
+            snackbarService.Show("Фильтрация", "Фильтры сброшены", ControlAppearance.Success);
+        }
+        catch (Exception ex)
+        {
+            snackbarService.Show(
+                "Ошибка",
+                $"Не удалось сбросить фильтры: {ex.Message}",
+                ControlAppearance.Danger
+            );
+        }
     }
 
     [RelayCommand]
@@ -66,6 +170,7 @@ public partial class LostItemsViewModel(
             var itemId = await lostItemRepository.AddAsync(newLostItem);
             var createdItem = await lostItemRepository.GetByIdAsync(itemId) ?? newLostItem;
             LostItems.Insert(0, createdItem);
+            ItemsCountText = $"Найдено предметов: {LostItems.Count}";
 
             snackbarService.Show(
                 "Успех",
@@ -181,6 +286,7 @@ public partial class LostItemsViewModel(
         {
             await lostItemRepository.DeleteAsync(item.ItemId);
             LostItems.Remove(item);
+            ItemsCountText = $"Найдено предметов: {LostItems.Count}";
             snackbarService.Show("Успех", "Предмет успешно удален", ControlAppearance.Success);
             await logRepository.AddAsync(
                 new ActionLog
