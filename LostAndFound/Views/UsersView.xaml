@@ -51,6 +51,7 @@
                        VerticalAlignment="Center" />
         </Grid>
         <DataGrid Grid.Row="1"
+                  x:Name="UsersDataGrid"
                   ItemsSource="{Binding Users}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
@@ -64,29 +65,35 @@
                   SelectionUnit="FullRow"
                   Background="{DynamicResource ControlFillColorDefaultBrush}"
                   ColumnWidth="SizeToHeader">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="CellEditEnding">
+                    <behaviors:InvokeCommandAction Command="{Binding UpdateUserCommand}"
+                                                   PassEventArgsToCommand="True" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID"
                                     Binding="{Binding UserId}"
                                     IsReadOnly="True"
                                     Width="Auto" />
                 <DataGridTextColumn Header="Логин"
-                                    Binding="{Binding Login}"
+                                    Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
                                     Width="*" />
                 <DataGridTextColumn Header="Имя"
-                                    Binding="{Binding FullName}"
+                                    Binding="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"
                                     Width="*" />
                 <DataGridTextColumn Header="Email"
-                                    Binding="{Binding Email}"
+                                    Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                                     Width="*" />
                 <DataGridTextColumn Header="Телефон"
-                                    Binding="{Binding Phone}"
+                                    Binding="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"
                                     Width="*" />
                 <DataGridTextColumn Header="Роль"
                                     Binding="{Binding Role.RoleName}"
                                     IsReadOnly="True"
                                     Width="*" />
                 <DataGridCheckBoxColumn Header="Активен"
-                                        Binding="{Binding IsActive}"
+                                        Binding="{Binding IsActive, UpdateSourceTrigger=PropertyChanged}"
                                         Width="Auto" />
                 <DataGridTextColumn Header="Создан"
                                     Binding="{Binding CreatedDate, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"

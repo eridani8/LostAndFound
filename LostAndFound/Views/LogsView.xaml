@@ -54,6 +54,7 @@
                   BorderBrush="Transparent"
                   SelectionMode="Extended"
                   SelectionUnit="FullRow"
+                  IsReadOnly="True"
                   Background="{DynamicResource ControlFillColorDefaultBrush}"
                   ColumnWidth="SizeToHeader">
             <DataGrid.Columns>
