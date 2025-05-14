@@ -49,12 +49,45 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <ui:TextBlock Grid.Row="0"
                           Text="{Binding ItemsCountText}"
                           Margin="0,0,0,10"
                           Foreground="AliceBlue" />
             <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"
+                            Orientation="Vertical"
+                            Margin="0,0,10,0">
+                    <ui:TextBlock Text="Дата находки (от)"
+                                  Margin="0,0,0,5"
+                                  Foreground="AliceBlue" />
+                    <DatePicker SelectedDate="{Binding FromDate, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1"
+                            Orientation="Vertical"
+                            Margin="0,0,10,0">
+                    <ui:TextBlock Text="Дата находки (до)"
+                                  Margin="0,0,0,5"
+                                  Foreground="AliceBlue" />
+                    <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2"
+                            Orientation="Vertical"
+                            Margin="0,0,10,0">
+                    <ui:TextBlock Text="Место находки"
+                                  Margin="0,0,0,5"
+                                  Foreground="AliceBlue" />
+                    <ComboBox ItemsSource="{Binding Locations}"
+                              SelectedItem="{Binding SelectedLocation}" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -100,7 +133,6 @@
                     <ui:Button Content="Применить фильтры"
                                Command="{Binding ApplyFiltersCommand}"
                                Appearance="Primary" />
-
                 </StackPanel>
             </Grid>
         </Grid>
@@ -167,11 +199,10 @@
                                         Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ui:Button
-                                Command="{Binding DataContext.DeleteLostItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                CommandParameter="{Binding}"
-                                Appearance="Danger"
-                                Content="Удалить" />
+                            <ui:Button Command="{Binding DataContext.DeleteLostItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                       CommandParameter="{Binding}"
+                                       Appearance="Danger"
+                                       Content="Удалить" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

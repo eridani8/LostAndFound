@@ -33,17 +33,44 @@ public partial class LostItemsViewModel(
 
     [ObservableProperty] private string _searchTerm = string.Empty;
 
+    [ObservableProperty] private DateTime? _fromDate;
+
+    [ObservableProperty] private DateTime? _toDate;
+
+    [ObservableProperty] private ObservableCollection<string> _locations = [];
+
+    [ObservableProperty] private string? _selectedLocation;
+
     [RelayCommand]
     private async Task WindowLoaded()
     {
-        var items = await lostItemRepository.GetAllAsync();
+        var items = (await lostItemRepository.GetAllAsync()).ToList();
         LostItems = new ObservableCollection<LostItem>(items);
         ItemsCountText = $"Найдено предметов: {LostItems.Count}";
 
         var allCategories = await categoryRepository.GetAllAsync();
-        Categories = new ObservableCollection<Category>(allCategories);
 
-        Statuses = new ObservableCollection<string>(["Все статусы", "Waiting", "Found", "Returned"]);
+        var categoriesList = new List<Category>
+        {
+            new() { CategoryId = -1, CategoryName = "Все категории" },
+        };
+        categoriesList.AddRange(allCategories);
+        Categories = new ObservableCollection<Category>(categoriesList);
+
+        Statuses = new ObservableCollection<string>(
+            ["Все статусы", "Waiting", "Found", "Returned"]
+        );
+
+        var uniqueLocations = items
+            .Select(i => i.FoundLocation)
+            .Where(loc => !string.IsNullOrEmpty(loc))
+            .Distinct()
+            .OrderBy(loc => loc)
+            .ToList();
+
+        var locationsList = new List<string> { "Все места" };
+        locationsList.AddRange(uniqueLocations);
+        Locations = new ObservableCollection<string>(locationsList);
     }
 
     [RelayCommand]
@@ -51,47 +78,31 @@ public partial class LostItemsViewModel(
     {
         try
         {
-            var filteredItems = await lostItemRepository.GetAllAsync();
-            var filtersApplied = false;
-
-            if (!string.IsNullOrEmpty(SearchTerm))
-            {
-                filteredItems = await lostItemRepository.SearchAsync(SearchTerm);
-                filtersApplied = true;
-            }
-
-            if (SelectedCategory != null)
-            {
-                if (filtersApplied)
-                {
-                    filteredItems = filteredItems.Where(item =>
-                        item.CategoryId == SelectedCategory.CategoryId
-                    );
-                }
-                else
-                {
-                    filteredItems = await lostItemRepository.GetByCategoryAsync(
-                        SelectedCategory.CategoryId
-                    );
-                    filtersApplied = true;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(SelectedStatus) && SelectedStatus != "Все статусы")
-            {
-                if (filtersApplied)
-                {
-                    filteredItems = filteredItems.Where(item => item.Status == SelectedStatus);
-                }
-                else
-                {
-                    filteredItems = await lostItemRepository.GetByStatusAsync(SelectedStatus);
-                    filtersApplied = true;
-                }
-            }
+            var filteredItems = await lostItemRepository.GetWithFiltersAsync(
+                searchTerm: string.IsNullOrEmpty(SearchTerm) ? null : SearchTerm,
+                categoryId: (SelectedCategory != null && SelectedCategory.CategoryId != -1)
+                    ? SelectedCategory.CategoryId
+                    : null,
+                status: (SelectedStatus != null && SelectedStatus != "Все статусы")
+                    ? SelectedStatus
+                    : null,
+                fromDate: FromDate,
+                toDate: ToDate,
+                location: (SelectedLocation != null && SelectedLocation != "Все места")
+                    ? SelectedLocation
+                    : null
+            );
 
             LostItems = new ObservableCollection<LostItem>(filteredItems);
             ItemsCountText = $"Найдено предметов: {LostItems.Count}";
+
+            var filtersApplied =
+                !string.IsNullOrEmpty(SearchTerm)
+                || (SelectedCategory != null && SelectedCategory.CategoryId != -1)
+                || (SelectedStatus != null && SelectedStatus != "Все статусы")
+                || FromDate.HasValue
+                || ToDate.HasValue
+                || (SelectedLocation != null && SelectedLocation != "Все места");
 
             var message = filtersApplied ? "Фильтры успешно применены" : "Показаны все записи";
 
@@ -115,6 +126,9 @@ public partial class LostItemsViewModel(
             SearchTerm = string.Empty;
             SelectedCategory = null;
             SelectedStatus = null;
+            FromDate = null;
+            ToDate = null;
+            SelectedLocation = null;
 
             var items = await lostItemRepository.GetAllAsync();
             LostItems = new ObservableCollection<LostItem>(items);
