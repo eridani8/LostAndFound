@@ -12,11 +12,11 @@
              ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
     <ScrollViewer Margin="20">
         <StackPanel>
-            <ui:TextBox x:Name="LoginTextBox" Margin="0,0,0,10" PlaceholderText="Логин" />
-            <ui:PasswordBox x:Name="PasswordBox" Margin="0,0,0,10" PlaceholderText="Пароль" />
-            <ui:TextBox x:Name="FullNameTextBox" Margin="0,0,0,10" PlaceholderText="Имя" />
-            <ui:TextBox x:Name="EmailTextBox" Margin="0,0,0,10" PlaceholderText="Email" />
-            <ui:TextBox x:Name="PhoneTextBox" Margin="0,0,0,10" PlaceholderText="Телефон" />
+            <ui:TextBox x:Name="Login" Margin="0,0,0,10" PlaceholderText="Логин" />
+            <ui:PasswordBox x:Name="Password" Margin="0,0,0,10" PlaceholderText="Пароль" />
+            <ui:TextBox x:Name="FullName" Margin="0,0,0,10" PlaceholderText="Имя" />
+            <ui:TextBox x:Name="Email" Margin="0,0,0,10" PlaceholderText="Email" />
+            <ui:TextBox x:Name="Phone" Margin="0,0,0,10" PlaceholderText="Телефон" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

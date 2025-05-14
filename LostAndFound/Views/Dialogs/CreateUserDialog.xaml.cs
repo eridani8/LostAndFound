@@ -5,39 +5,29 @@ namespace LostAndFound.Views.Dialogs;
 
 public partial class CreateUserDialog : UserControl
 {
-    public User? CreatedUser { get; private set; }
-
     public CreateUserDialog()
     {
         InitializeComponent();
     }
 
-    public User? GetUserData()
+    public User? CreateUser()
     {
-        if (
-            string.IsNullOrWhiteSpace(LoginTextBox.Text)
-            || string.IsNullOrWhiteSpace(PasswordBox.Password)
-            || string.IsNullOrWhiteSpace(FullNameTextBox.Text)
-        )
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(Login.Text)) return null;
+        if (string.IsNullOrEmpty(Password.Password)) return null;
+        if (string.IsNullOrEmpty(FullName.Text)) return null;
+        if (string.IsNullOrEmpty(Email.Text)) return null;
+        if (string.IsNullOrEmpty(Phone.Text)) return null;
 
         return new User
         {
-            Login = LoginTextBox.Text,
-            PasswordHash = "",
-            FullName = FullNameTextBox.Text,
-            Email = string.IsNullOrWhiteSpace(EmailTextBox.Text) ? null : EmailTextBox.Text,
-            Phone = string.IsNullOrWhiteSpace(PhoneTextBox.Text) ? null : PhoneTextBox.Text,
+            Login = Login.Text,
+            PasswordHash = Password.Password,
+            FullName = FullName.Text,
+            Email = Email.Text,
+            Phone = Phone.Text,
             RoleId = 2,
-            IsActive = true,
             CreatedDate = DateTime.Now,
+            IsActive = true
         };
-    }
-
-    public string GetPassword()
-    {
-        return PasswordBox.Password;
     }
 }

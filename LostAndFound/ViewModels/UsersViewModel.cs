@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LostAndFound.Data;
 using LostAndFound.Models;
-using LostAndFound.Views;
 using LostAndFound.Views.Dialogs;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -50,10 +49,10 @@ public partial class UsersViewModel(
 
         var result = await dialogService.ShowAsync(dialog, CancellationToken.None);
 
-        if (result != ContentDialogResult.Primary)
-            return;
+        if (result != ContentDialogResult.Primary) return;
+        
 
-        var newUser = createUserControl.GetUserData();
+        var newUser = createUserControl.CreateUser();
         if (newUser == null)
         {
             snackbarService.Show(
@@ -63,26 +62,23 @@ public partial class UsersViewModel(
             );
             return;
         }
-
-        var password = createUserControl.GetPassword();
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            snackbarService.Show("Ошибка", "Пароль не может быть пустым", ControlAppearance.Danger);
-            return;
-        }
-
+        
         try
         {
-            // Используем расширение для хеширования пароля
-            newUser.PasswordHash = password.HashPassword();
-
+            newUser.PasswordHash = newUser.PasswordHash.HashPassword();
+        
             var userId = await userRepository.AddAsync(newUser);
             var createdUser = await userRepository.GetByIdAsync(userId) ?? newUser;
             Users.Insert(0, createdUser);
-
+        
             snackbarService.Show("Успех", "Пользователь успешно создан", ControlAppearance.Success);
+            
             await logRepository.AddAsync(
-                new ActionLog { ActionType = "CreateUser", Details = "Создан новый пользователь" }
+                new ActionLog
+                {
+                    ActionType = "CreateUser",
+                    Details = $"Создан новый пользователь [{newUser.Login}]"
+                }
             );
         }
         catch (Exception ex)
