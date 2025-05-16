@@ -16,7 +16,8 @@ public partial class LostItemsViewModel(
     CategoryRepository categoryRepository,
     ISnackbarService snackbarService,
     IContentDialogService dialogService,
-    ActionLogRepository logRepository
+    ActionLogRepository logRepository,
+    StorageLocationRepository storageLocationRepository
 ) : ObservableObject
 {
     [ObservableProperty]
@@ -175,7 +176,8 @@ public partial class LostItemsViewModel(
             return;
         }
 
-        var createLostItemControl = new CreateLostItemDialog();
+        var createLostItemControl = new CreateLostItemDialog(categoryRepository, storageLocationRepository);
+        await createLostItemControl.LoadDataAsync();
 
         var dialog = new ContentDialog
         {
