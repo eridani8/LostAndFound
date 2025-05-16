@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LostAndFound.Data;
@@ -71,6 +72,8 @@ public partial class ReturnedItemsViewModel(
             ReturnedItems.Insert(0, createdReturn);
 
             var documentPath = await WordDocumentService.GenerateReturnReceiptAsync(createdReturn, appSettings.Value.ReportsDirectory);
+            
+            Process.Start(new ProcessStartInfo(documentPath) { UseShellExecute = true });
 
             snackbarService.Show(
                 "Успех",
@@ -148,6 +151,8 @@ public partial class ReturnedItemsViewModel(
         try
         {
             var documentPath = await WordDocumentService.GenerateReturnReceiptAsync(itemReturn, appSettings.Value.ReportsDirectory);
+            
+            Process.Start(new ProcessStartInfo(documentPath) { UseShellExecute = true });
 
             snackbarService.Show(
                 "Успех",

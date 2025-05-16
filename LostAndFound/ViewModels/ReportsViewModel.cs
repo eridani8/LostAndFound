@@ -1,13 +1,12 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LostAndFound.Data;
 using LostAndFound.Models;
+using LostAndFound.Services;
 using Microsoft.Win32;
 
 namespace LostAndFound.ViewModels;
@@ -30,8 +29,12 @@ public partial class ReportsViewModel(
 
     [ObservableProperty] private Category? _selectedCategory;
 
+    [ObservableProperty] private string _selectedFileFormat = "Текстовый файл";
+
     public string[] ReportTypes { get; } =
         ["Потерянные предметы", "Возвращенные предметы", "По типу вещи"];
+
+    public string[] FileFormats { get; } = ["Текстовый файл", "Word", "Excel"];
 
     [RelayCommand]
     private async Task LoadCategories()
@@ -93,21 +96,71 @@ public partial class ReportsViewModel(
         if (ReportResults.Count == 0)
             return;
 
-        var dialog = new SaveFileDialog
-        {
-            Filter = "Текстовый файл (*.txt)|*.txt",
-            FileName = $"{SelectedReportType}_{DateTime.Now:yyyyMMdd_HHmmss}",
-        };
-        if (dialog.ShowDialog() != true)
-            return;
-        var path = dialog.FileName;
-        await using var sw = new StreamWriter(path, false, Encoding.UTF8);
-
         var reportTitle = SelectedReportType;
         if (SelectedReportType == "По типу вещи" && SelectedCategory != null)
         {
             reportTitle = $"Отчет по типу вещи: {SelectedCategory.CategoryName}";
         }
+
+        string filter;
+        string extension;
+
+        switch (SelectedFileFormat)
+        {
+            case "Word":
+                filter = "Документ Word (*.docx)|*.docx";
+                extension = ".docx";
+                break;
+            case "Excel":
+                filter = "Таблица Excel (*.xlsx)|*.xlsx";
+                extension = ".xlsx";
+                break;
+            default:
+                filter = "Текстовый файл (*.txt)|*.txt";
+                extension = ".txt";
+                break;
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            Filter = filter,
+            FileName = $"{SelectedReportType}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}",
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        var path = dialog.FileName;
+
+        switch (SelectedFileFormat)
+        {
+            case "Word":
+                await WordDocumentService.SaveReportToWordAsync(
+                    reportTitle,
+                    StartDate,
+                    EndDate,
+                    ReportResults,
+                    path
+                );
+                break;
+            case "Excel":
+                await ExcelDocumentService.SaveReportToExcelAsync(
+                    reportTitle,
+                    StartDate,
+                    EndDate,
+                    ReportResults,
+                    path
+                );
+                break;
+            default:
+                await SaveToTextFile(path, reportTitle);
+                break;
+        }
+    }
+
+    private async Task SaveToTextFile(string path, string reportTitle)
+    {
+        await using var sw = new StreamWriter(path, false, Encoding.UTF8);
 
         await sw.WriteLineAsync(
             $"{reportTitle}{Environment.NewLine}{StartDate.ToLongDateString()} - {EndDate.ToLongDateString()}"

@@ -47,19 +47,27 @@
             <ui:Button Content="Сформировать"
                        Command="{Binding GenerateReportCommand}"
                        Appearance="Primary" />
+            <TextBlock Text="Формат:"
+                       VerticalAlignment="Center"
+                       Margin="10,0,5,0"
+                       Foreground="AliceBlue" />
+            <ComboBox Width="120"
+                      Margin="0 0 10 0"
+                      ItemsSource="{Binding FileFormats}"
+                      SelectedItem="{Binding SelectedFileFormat, Mode=TwoWay}" />
             <ui:Button Content="Сохранить отчет"
                        Command="{Binding SaveReportCommand}"
                        Appearance="Primary"
-                       Margin="10,0,0,0" />
+                       Margin="0,0,0,0" />
         </StackPanel>
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     Margin="0,0,0,10"
                     Visibility="{Binding SelectedReportType,
-&#xA;                    Converter={StaticResource StringEqualityConverter}, 
-&#xA;                    ConverterParameter={StaticResource ReportTypeCategory}, 
-&#xA;                    Mode=OneWay, 
-&#xA;                    FallbackValue=Collapsed}">
+&#xA;&#xA;                    Converter={StaticResource StringEqualityConverter}, 
+&#xA;&#xA;                    ConverterParameter={StaticResource ReportTypeCategory}, 
+&#xA;&#xA;                    Mode=OneWay, 
+&#xA;&#xA;                    FallbackValue=Collapsed}">
             <TextBlock Text="Выберите категорию:"
                        VerticalAlignment="Center"
                        Margin="0,0,10,0"
