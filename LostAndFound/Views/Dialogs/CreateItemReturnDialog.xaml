@@ -12,15 +12,18 @@
              ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
     <ScrollViewer Margin="20">
         <StackPanel>
-            <ui:TextBox x:Name="ItemIdInput"
-                        Margin="0,0,0,10"
-                        PlaceholderText="ID предмета" />
+            <TextBlock Margin="0,0,0,3">Предмет</TextBlock>
+            <ComboBox x:Name="ItemComboBox"
+                      Margin="0,0,0,10"
+                      DisplayMemberPath="ItemName"
+                      SelectedValuePath="ItemId">
+            </ComboBox>
             <ui:TextBox x:Name="ReturnedToInput"
                         Margin="0,0,0,10"
                         PlaceholderText="Кому возвращен" />
             <DatePicker x:Name="ReturnDatePicker"
-                           Margin="0,0,0,10"
-                           SelectedDateFormat="Short" />
+                        Margin="0,0,0,10"
+                        SelectedDateFormat="Short" />
             <ui:TextBox x:Name="ContactInfoInput"
                         Margin="0,0,0,10"
                         PlaceholderText="Контактная информация" />

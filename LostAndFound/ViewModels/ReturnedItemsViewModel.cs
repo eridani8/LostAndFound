@@ -14,7 +14,8 @@ public partial class ReturnedItemsViewModel(
     ItemReturnRepository returnRepository,
     ISnackbarService snackbarService,
     IContentDialogService dialogService,
-    ActionLogRepository logRepository
+    ActionLogRepository logRepository,
+    LostItemRepository lostItemRepository
 ) : ObservableObject
 {
     [ObservableProperty]
@@ -33,7 +34,8 @@ public partial class ReturnedItemsViewModel(
         if (App.CurrentUser is not { } currentUser)
             return;
 
-        var createItemReturnControl = new CreateItemReturnDialog();
+        var createItemReturnControl = new CreateItemReturnDialog(lostItemRepository);
+        await createItemReturnControl.LoadDataAsync();
 
         var dialog = new ContentDialog
         {
