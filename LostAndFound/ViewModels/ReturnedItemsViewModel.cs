@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LostAndFound.Data;
 using LostAndFound.Models;
+using LostAndFound.Services;
 using LostAndFound.Views.Dialogs;
+using Microsoft.Extensions.Options;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
@@ -15,8 +17,8 @@ public partial class ReturnedItemsViewModel(
     ISnackbarService snackbarService,
     IContentDialogService dialogService,
     ActionLogRepository logRepository,
-    LostItemRepository lostItemRepository
-) : ObservableObject
+    LostItemRepository lostItemRepository,
+    IOptions<AppSettings> appSettings) : ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<ItemReturn> _returnedItems = [];
@@ -68,9 +70,11 @@ public partial class ReturnedItemsViewModel(
             var createdReturn = await returnRepository.GetByIdAsync(returnId) ?? newItemReturn;
             ReturnedItems.Insert(0, createdReturn);
 
+            var documentPath = await WordDocumentService.GenerateReturnReceiptAsync(createdReturn, appSettings.Value.ReportsDirectory);
+
             snackbarService.Show(
                 "Успех",
-                "Возврат предмета успешно зарегистрирован",
+                $"Возврат предмета успешно зарегистрирован. Документ сохранен: {documentPath}",
                 ControlAppearance.Success
             );
 
@@ -133,6 +137,37 @@ public partial class ReturnedItemsViewModel(
             snackbarService.Show(
                 "Ошибка",
                 $"Не удалось удалить запись о возврате: {ex.Message}",
+                ControlAppearance.Danger
+            );
+        }
+    }
+
+    [RelayCommand]
+    private async Task GenerateReturnDocument(ItemReturn itemReturn)
+    {
+        try
+        {
+            var documentPath = await WordDocumentService.GenerateReturnReceiptAsync(itemReturn, appSettings.Value.ReportsDirectory);
+
+            snackbarService.Show(
+                "Успех",
+                $"Документ о возврате успешно создан: {documentPath}",
+                ControlAppearance.Success
+            );
+
+            await logRepository.AddAsync(
+                new ActionLog
+                {
+                    ActionType = "GenerateReturnDocument",
+                    Details = $"Создание документа о возврате предмета ID={itemReturn.ItemId}",
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            snackbarService.Show(
+                "Ошибка",
+                $"Не удалось создать документ о возврате: {ex.Message}",
                 ControlAppearance.Danger
             );
         }
